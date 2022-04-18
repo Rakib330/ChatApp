@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h1>Go To Console</h1>
+    <table id="table" border="1" cellspacing="0" width="100%">
+        <tr>
+            <th>Sl#</th>
+            <th>Name</th>
+            <th>Age</th>
+        </tr>
+    </table>
+    <script>
+        //litarel
+        var person = { Name: "mim", Age: 23 };
+        person.details = function () {
+            return `Name:${this.Name},Age:${this.Age}`;
+        }
+        console.log(person.details());
+
+        //factory
+        function Person1(name, age) {
+            var obj = {};
+            obj.Name = name;
+            obj.Age = age;
+            obj.details = function () {
+                return `Name:${this.Name},Age:${this.Age}`;
+            };
+            return obj;
+        }
+        var p2 = new Person1("mim2", 24);
+        console.log(p2.details());
+        //namespace
+        var isDB = isDB || {};
+        isDB.Person = function (name, age) {
+            this.Name = name;
+            this.Age = age;
+        }
+        isDB.Person.prototype.details = function () {
+            return `Name:${this.Name},Age:${this.Age}`;
+        };
+        var p3 = new isDB.Person("mim2", 24);
+        console.log(p3.details());
+        //constructor
+        function Person(name, age) {
+            this.Name = name;
+            this.Age = age;
+        }
+        Person.prototype.details = function () {
+            return `Name:${this.Name},Age:${this.Age}`;
+        };
+        var p1 = new Person("mim2", 24);
+        console.log(p1.details());
+
+        //inheritnce
+        Person.prototype = new Person();
+        function dirPerson(name, age, address) {
+            Person.call(this, name, age);
+            this.address = address;
+        }
+        dirPerson.prototype.details = function () {
+            return `Name:${this.Name},Age:${this.Age},Address:${this.address}`;
+        };
+        var p4 = new dirPerson("mim2", 24, "gopali");
+        console.log(p4.details());
+
+
+
+        //array
+        var arr = [
+                    { Name: "mim0", Age: 23 },
+                    { Name: "mim1", Age: 23 },
+                    { Name: "mim2", Age: 23 },
+                    { Name: "mim3", Age: 23 }
+        ];
+        arr.pop();
+        arr.shift();
+        arr.push({ Name: "mim4", Age: 23 });
+        arr.unshift({ Name: "mim4", Age: 23 });
+        arr.forEach((d, i) => {
+            document.getElementById("table").innerHTML += `
+                                                            <tr>
+                                                                <td>${i}</td>
+                                                                <td>${d.Name}</td>
+                                                                <td>${d.Age}</td>
+                                                            </tr>
+                                                        `;
+           // console.log(`${i},${d.Name},${d.Age}`);
+        })
+    </script>
+</body>
+</html>

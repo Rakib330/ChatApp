@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Chat app</title>
+  <link rel="stylesheet" href="./styles/style.css" />
+  <script src="./node_modules/jquery/dist/jquery.js"></script>
+  <script src="./node_modules/socket.io/client-dist/socket.io.js"></script>
+  <script src="./node_modules/socketio-file-upload/client.js"></script>
+  <script>
+    var dname = "";
+    $(() => {
+      var socket = io.connect("http://localhost:8200");
+      socket.on("connect", () => {
+        console.log("connected");
+      });
+      var siofu = new SocketIOFileUpload(socket);
+      siofu.listenOnInput(document.getElementById("uploadfile"));
+      siofu.listenOnDrop(document.getElementById("drop"));
+      socket.on("connected", (msg) => {
+        $("#connect").show();
+      });
+      socket.on("updateusers", (userlist) => {
+        $("#chatzone").show();
+        $("#connect").hide();
+
+        console.log(userlist);
+        $("#users").empty();
+        userlist.forEach((u) => {
+          $("#users").append(
+            `<li>${u}</li>`
+          );
+        });
+      });
+      socket.on("message", (data) => {
+        console.log(data);
+        $("#msgs").append(
+          `<li> ${data.f}: ${data.m}</li>`
+        );
+      });
+      socket.on("uploaded", (data) => {
+        console.log(data.length);
+        var name = '...' + data.substring(data.length - 10);
+        console.log(name);
+        $("#files").append(`<tr>
+                            <td>
+                              <svg  viewBox="0 0 384 512"><path d="M384 128h-128V0L384 128zM256 160H384v304c0 26.51-21.49 48-48 48h-288C21.49 512 0 490.5 0 464v-416C0 21.49 21.49 0 48 0H224l.0039 128C224 145.7 238.3 160 256 160zM255 295L216 334.1V232c0-13.25-10.75-24-24-24S168 218.8 168 232v102.1L128.1 295C124.3 290.3 118.2 288 112 288S99.72 290.3 95.03 295c-9.375 9.375-9.375 24.56 0 33.94l80 80c9.375 9.375 24.56 9.375 33.94 0l80-80c9.375-9.375 9.375-24.56 0-33.94S264.4 285.7 255 295z"/></svg>
+                          </td>
+                            <td style="overflow: scroll;">
+                          <span>${name}</span>
+                          </td>
+                            <td>
+                          <a href='/Uploads/${data}' target='_blank'>Download</a>
+                          </td>
+                          </tr>`)
+
+      });
+      $("#join").click(() => {
+        socket.emit("addme", $("#dname").val());
+        dname = $("#dname").val();
+        $("#me").html(dname);
+      });
+      $("#send").click(() => {
+        if ($("#m").val() != "")
+          socket.emit("send", {
+            f: dname,
+            m: $("#m").val(),
+          });
+        $("#m").val("");
+      });
+      $("#upload").click(() => {
+        $("#uploadfile").trigger("click");
+      });
+      siofu.addEventListener("complete", function (event) {
+        //console.log(event.success);
+        //console.log(event.file);
+        $("#files").append(`
+        <tr>
+            <td>
+              <svg style="width:20px"  viewBox="0 0 384 512"><path d="M384 128h-128V0L384 128zM256 160H384v304c0 26.51-21.49 48-48 48h-288C21.49 512 0 490.5 0 464v-416C0 21.49 21.49 0 48 0H224l.0039 128C224 145.7 238.3 160 256 160zM255 295L216 334.1V232c0-13.25-10.75-24-24-24S168 218.8 168 232v102.1L128.1 295C124.3 290.3 118.2 288 112 288S99.72 290.3 95.03 295c-9.375 9.375-9.375 24.56 0 33.94l80 80c9.375 9.375 24.56 9.375 33.94 0l80-80c9.375-9.375 9.375-24.56 0-33.94S264.4 285.7 255 295z"/></svg>
+          </td>
+            <td>
+            <div style="width:100px;overflow-wrap:break-word;">
+          ${event.file.name}
+          </div>
+          </td>
+            <td>
+          <a href='/Uploads/${event.file.name}' target='_blank'>Download</a>
+          </td>
+          </tr>`)
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div id="connect" style="display: none">
+      <p>ID:1268972</p>
+      <input type="text" class="connect-input" id="dname" placeholder="Enter Your Name" />
+      <button class="connect-btn" id="join">Connect</button>
+    </div>
+    <div id="chatzone" style="display: none">
+      <div class="chatzone-left">
+        <h1 id="me">Rakib</h1>
+        <div class="msgbody">
+          <div class="msg">
+            <h2>Send Message</h2>
+            <div class="msginput">
+              <input type="text" id="m" placeholder="Write Your Message Here" />
+              <button id="send">Send</button>
+            </div>
+            <ul id="msgs" class="msgoutput list"></ul>
+          </div>
+          <div class="msg">
+            <h2>Send Files</h2>
+            <div class="msginput">
+              <div class="drop" id="drop">
+                Drop files here
+              </div>
+              <button id="upload">Upload</button>
+            </div>
+            <table class="msgoutput files" id="files"></table>
+          </div>
+        </div>
+      </div>
+      <div class="chatzone-right" id="ulist">
+        <h3>Connected Users</h3>
+        <ul id="users" class="list"></ul>
+      </div>
+    </div>
+    <input type="file" id="uploadfile" style="display: none" />
+</body>
+
+</html>

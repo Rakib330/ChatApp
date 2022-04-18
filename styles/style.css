@@ -1,0 +1,116 @@
+*{
+     padding: 0;
+     margin: 0;
+     box-sizing: border-box;
+     font-family:Arial, Helvetica, sans-serif;
+}
+#connect{
+     width: 100%;
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+     background: #aaa;
+}
+#connect input{
+     width: 50%;
+     height: 50px;
+     font-size: 30px;
+     text-align: center;
+     border: 1px solid #999;
+     border-radius: 5px;
+     margin: 10px;
+     box-shadow:inset 0 0 3px #555;
+}
+#connect button{
+     width: 150px;
+     height: 25px;
+     background: white;
+     color: #000;
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     box-shadow: 0 0 5px #777;
+}
+
+
+#chatzone{
+     display: flex;
+     justify-content:flex-start;
+}
+
+.chatzone-right{
+     width: 200px;
+     box-shadow:inset 0px 0px 2px #555;
+     height: 100vh;
+}
+.chatzone-right h3{
+     color: gray;
+     text-align: center;
+     border-bottom: 1px solid gray;
+     background: #333;
+}
+.chatzone-right ul{
+     margin-left: 30px;
+}
+.chatzone-left{
+     width: calc(100vw - 200px);
+     background: white;
+     padding: 10px;
+     display: flex;
+    align-items: center;
+     flex-direction: column;
+}
+#me{
+     background: #222;
+     width: 100%;
+     color:#fff;
+     text-align: center;
+}
+.msgbody{
+     width: 100%;
+     display: flex;
+    justify-content: center;
+     flex-direction: row;
+}
+.msg{
+     padding: 10px;
+     width: 50%;
+     display: flex;
+     align-items: center;
+     flex-direction: column;
+}
+.msg:last-child{
+     border-left: 1px solid black;
+}
+.msginput{
+     width: 100%;
+}
+.msginput input{
+     width: 65%;
+     height: 30px;
+}
+.msginput .drop{
+     width: 100%;
+     height: 50px;
+     border: 1px solid black;
+     text-align: center;
+     line-height: 50px;
+     opacity: .3;
+     user-select: none;
+}
+.msginput button{
+     width: 30%;
+     height: 30px;
+}
+#upload{
+     width: 100%;
+     height: 30px;
+     margin-top: 3px;
+}
+.msgoutput{
+     width: 100%;
+     margin-left: 20px;
+}
+
